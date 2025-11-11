@@ -4,87 +4,74 @@ import streamlit as st
 import plotly.express as px
 from datetime import datetime
 
-# Configuración de la página
 st.set_page_config(
-    page_title="Sensor de Luminosidad - EAFIT",
-    page_icon="💡",
+    page_title="💡 Sensor de Luminosidad - EAFIT",
+    page_icon="🌞",
     layout="wide"
 )
 
-#ESTILO PERSONALIZADO
+# ESTILO
 st.markdown("""
     <style>
-    /* Fondo general */
+    body {
+        background-color: #FDFEFE;
+    }
     .main {
-        background-color: #F8F9FA;
-        font-family: "Inter", sans-serif;
+        background: linear-gradient(180deg, #FDFEFE 0%, #E8F6F3 100%);
+        font-family: "Poppins", sans-serif;
         color: #2C3E50;
         padding: 2rem;
     }
-
-    /* Títulos */
     h1, h2, h3 {
-        color: #1E3D58;
+        color: #1A5276;
         font-weight: 700;
     }
-
-    /* Tarjetas (métricas) */
     .stMetric {
         background-color: #FFFFFF;
-        border: 1px solid #E0E0E0;
+        border: 2px solid #D6EAF8;
         border-radius: 12px;
         padding: 15px;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
     }
-
-    /* Gráficos */
-    .plot-container {
-        background-color: white;
-        border-radius: 10px;
-        padding: 10px;
-        box-shadow: 1px 1px 8px rgba(0,0,0,0.05);
+    .block-container {
+        padding-top: 1rem;
     }
-
-    /* Expander y tablas */
-    .streamlit-expanderHeader {
-        background-color: #E9ECEF;
-        border-radius: 6px;
-        color: #1E3D58;
-        font-weight: 500;
+    .metric-label {
+        font-weight: bold;
+        color: #154360;
     }
-
-    /* Pie de página */
-    footer {
-        visibility: hidden;
+    .stTabs [role="tablist"] {
+        justify-content: center;
     }
     </style>
 """, unsafe_allow_html=True)
 
+# ==============================
 # ENCABEZADO
+# ==============================
 st.markdown("""
-    <div style="background-color:#FFFFFF; padding:20px; border-radius:10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
-        <h1 style="text-align:center; margin-bottom:0;">Sensor de Luminosidad - Universidad EAFIT</h1>
-        <p style="text-align:center; color:#555;">Monitoreo y análisis de luminosidad en la universidad</p>
-    </div>
+<div style="background-color:#FDFEFE; padding:20px; border-radius:10px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+    <h1>🌞 Sensor de Luminosidad - Universidad EAFIT</h1>
+    <p style="color:#117864; font-size:16px;">Analiza cómo varía la luz ambiental en la universidad.</p>
+</div>
 """, unsafe_allow_html=True)
 
 st.markdown("")
 
-# UBICACIÓN
-st.subheader("Ubicación del sensor")
+# MAPA DEL SENSOR
+st.subheader("📍 Ubicación del sensor")
 eafit_location = pd.DataFrame({'lat': [6.2006], 'lon': [-75.5783]})
-st.map(eafit_location, zoom=15, size=50)
+st.map(eafit_location, zoom=15, size=60)
 
-# CARGA DE DATOS
-st.markdown("### Cargar archivo CSV con lecturas de luminosidad (lux)")
-uploaded_file = st.file_uploader("Seleccione el archivo CSV", type=["csv"])
+st.markdown("### 📁 Cargar archivo CSV con lecturas de luminosidad (lux)")
+uploaded_file = st.file_uploader("Selecciona tu archivo CSV", type=["csv"])
 
+# PROCESAMIENTO DE DATOS
 if uploaded_file is not None:
     try:
-        # Cargar datos
         df = pd.read_csv(uploaded_file)
 
-        # Normalizar columnas
+        # Procesar columnas
         if 'Time' in df.columns:
             df['Time'] = pd.to_datetime(df['Time'])
             df = df.rename(columns={df.columns[1]: 'Luminosidad (lux)'})
@@ -94,71 +81,72 @@ if uploaded_file is not None:
 
         df = df.set_index('Time')
 
-        # Estadísticas básicas
+        # Calcular estadísticas
         mean_val = df['Luminosidad (lux)'].mean()
         max_val = df['Luminosidad (lux)'].max()
         min_val = df['Luminosidad (lux)'].min()
         current_val = df['Luminosidad (lux)'].iloc[-1]
 
-        # MÉTRICAS
-        st.markdown("### Indicadores principales")
+        # MÉTRICAS COLOR
+        st.markdown("## ✨ Indicadores Principales")
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Valor actual", f"{current_val:.2f} lux")
-        col2.metric("Promedio", f"{mean_val:.2f} lux")
-        col3.metric("Máximo", f"{max_val:.2f} lux")
-        col4.metric("Mínimo", f"{min_val:.2f} lux")
+        col1.metric("🔆 Valor actual", f"{current_val:.2f} lux")
+        col2.metric("🌤️ Promedio", f"{mean_val:.2f} lux")
+        col3.metric("☀️ Máximo", f"{max_val:.2f} lux")
+        col4.metric("🌙 Mínimo", f"{min_val:.2f} lux")
 
         st.markdown("---")
 
-        # GRÁFICOS
-        st.markdown("### Visualización de datos")
+       
+        # GRÁFICOS 
+        st.markdown("## 📊 Visualización de Datos")
 
-        # Línea temporal
+        # Gráfico de línea
         fig_line = px.line(
             df,
             y='Luminosidad (lux)',
-            title="Evolución temporal de la luminosidad",
+            title="📈 Evolución temporal de la luminosidad",
             labels={'Time': 'Tiempo', 'Luminosidad (lux)': 'Luminosidad (lux)'},
-            template="plotly_white",
-            color_discrete_sequence=['#3B82F6']
+            color_discrete_sequence=['#2E86DE'],
+            template="plotly_white"
         )
-        fig_line.update_traces(line=dict(width=2.5))
+        fig_line.update_traces(line=dict(width=3))
         fig_line.update_layout(
             title_x=0.5,
+            font=dict(size=14),
             plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(size=14)
+            paper_bgcolor='rgba(0,0,0,0)'
         )
         st.plotly_chart(fig_line, use_container_width=True)
 
         # Histograma de distribución
-        st.markdown("### Distribución de valores de luminosidad")
+        st.markdown("## 🌈 Distribución de Luminosidad")
         fig_hist = px.histogram(
             df,
             x='Luminosidad (lux)',
             nbins=25,
-            title="Distribución de luminosidad",
-            color_discrete_sequence=['#10B981'],
+            title="🌤️ Distribución de los valores medidos",
+            color_discrete_sequence=['#1ABC9C'],
             template="plotly_white"
         )
         fig_hist.update_layout(title_x=0.5)
         st.plotly_chart(fig_hist, use_container_width=True)
 
-        # ======== DATOS ========
-        with st.expander("Ver tabla de datos"):
-            st.dataframe(df.style.highlight_max(axis=0, color='#D4EFDF'))
+        # Mostrar tabla con estilo
+        with st.expander("📋 Ver datos en tabla"):
+            st.dataframe(df.style.background_gradient(cmap='YlGnBu'))
 
     except Exception as e:
-        st.error(f"Error al procesar el archivo: {e}")
+        st.error(f"❌ Ocurrió un error al procesar el archivo: {e}")
 
 else:
-    st.info("Cargue un archivo CSV para comenzar el análisis.")
+    st.info("👆 Carga un archivo CSV para comenzar el análisis.")
 
 # PIE DE PÁGINA
 st.markdown("""
 ---
-<div style="text-align:center; color:#555;">
-    <p>Computación Física e IoT- Universidad EAFIT</p>
+<div style="text-align:center; color:#117A65;">
+    <p>💻 Proyecto de Computación Física e IoT- Universidad EAFIT</p>
     <p>Mariana Echeverri</p>
 </div>
 """, unsafe_allow_html=True)
