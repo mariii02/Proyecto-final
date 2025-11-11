@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 from datetime import datetime
+pip install matplotlib
 
 st.set_page_config(
     page_title="💡 Sensor de Luminosidad - EAFIT",
