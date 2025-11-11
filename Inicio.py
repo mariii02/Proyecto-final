@@ -1,6 +1,3 @@
-# Dashboard de Sensor de Luminosidad
-# Autor: [Mariana Echeverri]
-# Descripción: Visualización de datos del sensor de luminosidad (lux) con estilo moderno.
 
 import pandas as pd
 import streamlit as st
@@ -67,7 +64,7 @@ st.markdown("""
 st.markdown("""
     <div style="background-color:#FFFFFF; padding:20px; border-radius:10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);">
         <h1 style="text-align:center; margin-bottom:0;">Sensor de Luminosidad - Universidad EAFIT</h1>
-        <p style="text-align:center; color:#555;">Monitoreo y análisis de la intensidad lumínica en el campus universitario</p>
+        <p style="text-align:center; color:#555;">Monitoreo y análisis de luminosidad en la universidad</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -161,7 +158,7 @@ else:
 st.markdown("""
 ---
 <div style="text-align:center; color:#555;">
-    <p>Proyecto desarrollado para el curso de Computación Física e IoT- Universidad EAFIT</p>
-    <p>Autor: [Mariana Echeverri]</p>
+    <p>Computación Física e IoT- Universidad EAFIT</p>
+    <p>Mariana Echeverri</p>
 </div>
 """, unsafe_allow_html=True)
