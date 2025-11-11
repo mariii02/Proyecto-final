@@ -3,7 +3,6 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 from datetime import datetime
-pip install matplotlib
 
 st.set_page_config(
     page_title="💡 Sensor de Luminosidad - EAFIT",
@@ -47,9 +46,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ==============================
 # ENCABEZADO
-# ==============================
 st.markdown("""
 <div style="background-color:#FDFEFE; padding:20px; border-radius:10px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
     <h1>🌞 Sensor de Luminosidad - Universidad EAFIT</h1>
@@ -135,7 +132,7 @@ if uploaded_file is not None:
 
         # Mostrar tabla con estilo
         with st.expander("📋 Ver datos en tabla"):
-            st.dataframe(df.style.background_gradient(cmap='YlGnBu'))
+            st.dataframe(df)
 
     except Exception as e:
         st.error(f"❌ Ocurrió un error al procesar el archivo: {e}")
